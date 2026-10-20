@@ -826,7 +826,7 @@ clean: objclean profileclean
 
 # evaluation network (nnue)
 net:
-	$(eval nnuenet := xiangqi-c07e94a5c7cb.nnue)
+	$(eval nnuenet := nn-c07e94a5c7cb.nnue)
 	@echo "Default net: $(nnuenet)"
 	$(eval nnuedownloadurl1 := https://github.com/fairy-stockfish/Fairy-Stockfish-NNUE/raw/master/xiangqi-c07e94a5c7cb.nnue)
 	$(eval nnuedownloadurl2 := https://github.com/fairy-stockfish/Fairy-Stockfish-NNUE/raw/master/xiangqi-c07e94a5c7cb.nnue)
