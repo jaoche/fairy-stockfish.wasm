@@ -826,10 +826,10 @@ clean: objclean profileclean
 
 # evaluation network (nnue)
 net:
-	$(eval nnuenet := $(shell grep EvalFileDefaultName evaluate.h | grep define | sed 's/.*\(nn-[a-z0-9]\{12\}.nnue\).*/\1/'))
+	$(eval nnuenet := xiangqi-c07e94a5c7cb.nnue)
 	@echo "Default net: $(nnuenet)"
-	$(eval nnuedownloadurl1 := https://tests.stockfishchess.org/api/nn/$(nnuenet))
-	$(eval nnuedownloadurl2 := https://github.com/official-stockfish/networks/raw/master/$(nnuenet))
+	$(eval nnuedownloadurl1 := https://github.com/fairy-stockfish/Fairy-Stockfish-NNUE/raw/master/xiangqi-c07e94a5c7cb.nnue)
+	$(eval nnuedownloadurl2 := https://github.com/fairy-stockfish/Fairy-Stockfish-NNUE/raw/master/xiangqi-c07e94a5c7cb.nnue)
 	$(eval curl_or_wget := $(shell if hash curl 2>/dev/null; then echo "curl -skL"; elif hash wget 2>/dev/null; then echo "wget -qO-"; fi))
 	@if [ "x$(curl_or_wget)" = "x" ]; then \
 	    echo "Automatic download failed: neither curl nor wget is installed. Install one of these tools or download the net manually"; exit 1; \
@@ -847,7 +847,7 @@ net:
 	      fi; \
 	   fi; \
 	   if [ "x$(shasum_command)" != "x" ]; then \
-	      if [ "$(nnuenet)" != "nn-"`$(shasum_command) $(nnuenet) | cut -c1-12`".nnue" ]; then \
+	      if [ "$(nnuenet)" != "xiangqi-"`$(shasum_command) $(nnuenet) | cut -c1-12`".nnue" ] && [ "$(nnuenet)" != "nn-"`$(shasum_command) $(nnuenet) | cut -c1-12`".nnue" ]; then \
 	         echo "Removing failed download"; rm -f $(nnuenet); \
 	      else \
 	         echo "Network validated"; break; \
