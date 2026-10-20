@@ -72,6 +72,13 @@ jobs:
           docker compose run -e uci_exe="node public/uci-puppeteer.js" -e n=15 browser
           bash tests/stress.sh
 
+      - name: Upload embedded-xiangqi build
+        if: ${{ matrix.wasm_simd == 'yes' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: embedded-xiangqi-wasm
+          path: src/emscripten/public/stockfish*
+
   test-no-embedded-nnue:
     runs-on: ubuntu-24.04
     defaults:
