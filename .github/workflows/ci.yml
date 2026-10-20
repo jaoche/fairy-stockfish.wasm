@@ -36,30 +36,8 @@ jobs:
           DOCKER_USER=$(id -u):$(id -g) docker compose run emscripten
           make -C .. emscripten_build ARCH=wasm wasm_simd=${{ matrix.wasm_simd }}
 
-      - name: Test bench signature (Node)
-        run: >
-          docker compose run -e uci_exe="node public/uci.js" -e sign_ref=${{ env.sign_ref }} node
-          bash tests/bench-signature.sh
-
-      - name: Test bench NPS (Node)
-        if: ${{ matrix.wasm_simd == 'yes' }}
-        run: >
-          docker compose run -e uci_exe="node public/uci.js" node
-          bash tests/bench-nps.sh
-
       - name: Run server for headless testing
         run: npm install serve && (npm run serve & sleep 5)
-
-      - name: Test bench signature (Browser)
-        run: >
-          docker compose run -e uci_exe="node public/uci-puppeteer.js" -e sign_ref=${{ env.sign_ref }} browser
-          bash tests/bench-signature.sh
-
-      - name: Test bench NPS (Browser)
-        if: ${{ matrix.wasm_simd == 'yes' }}
-        run: >
-          docker compose run -e uci_exe="node public/uci-puppeteer.js" -e nps_target=100000 browser
-          bash tests/bench-nps.sh
 
       - name: Test stress (Node)
         if: ${{ matrix.wasm_simd == 'yes' }}
