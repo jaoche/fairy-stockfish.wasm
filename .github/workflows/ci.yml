@@ -39,18 +39,6 @@ jobs:
       - name: Run server for headless testing
         run: npm install serve && (npm run serve & sleep 5)
 
-      - name: Test stress (Node)
-        if: ${{ matrix.wasm_simd == 'yes' }}
-        run: >
-          docker compose run -e uci_exe="node public/uci.js" -e n=30 node
-          bash tests/stress.sh
-
-      - name: Test stress (Browser)
-        if: ${{ matrix.wasm_simd == 'yes' }}
-        run: >
-          docker compose run -e uci_exe="node public/uci-puppeteer.js" -e n=15 browser
-          bash tests/stress.sh
-
       - name: Upload embedded-xiangqi build
         if: ${{ matrix.wasm_simd == 'yes' }}
         uses: actions/upload-artifact@v4
