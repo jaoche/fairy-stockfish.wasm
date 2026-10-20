@@ -826,7 +826,7 @@ clean: objclean profileclean
 
 # evaluation network (nnue)
 net:
-	$(eval nnuenet := nn-c07e94a5c7cb.nnue)
+	$(eval nnuenet := xiangqi-c07e94a5c7cb.nnue)
 	@echo "Default net: $(nnuenet)"
 	$(eval nnuedownloadurl1 := https://github.com/fairy-stockfish/Fairy-Stockfish-NNUE/raw/master/xiangqi-c07e94a5c7cb.nnue)
 	$(eval nnuedownloadurl2 := https://github.com/fairy-stockfish/Fairy-Stockfish-NNUE/raw/master/xiangqi-c07e94a5c7cb.nnue)
@@ -847,7 +847,7 @@ net:
 	      fi; \
 	   fi; \
 	   if [ "x$(shasum_command)" != "x" ]; then \
-	      if [ "$(nnuenet)" != "nn-"`$(shasum_command) $(nnuenet) | cut -c1-12`".nnue" ]; then \
+	      if [ "$(nnuenet)" != "nn-"`$(shasum_command) $(nnuenet) | cut -c1-12`".nnue" ] && [ "$(nnuenet)" != "xiangqi-"`$(shasum_command) $(nnuenet) | cut -c1-12`".nnue" ]; then \
 	         echo "Removing failed download"; rm -f $(nnuenet); \
 	      else \
 	         echo "Network validated"; break; \
