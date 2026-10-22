@@ -1,26 +1,18 @@
 name: build-fs-wasm-c
-on:
-  workflow_dispatch:
-  push:
-    branches: [build-c-imported-memory, build-x-matrix]
-jobs:
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
+on:/n  workflow_dispatch:/n  push:/n    branches: [build-c-imported-memory, build-asyncify-advise, build-x-matrix]
+jobs:/n  build:/n    runs-on: ubuntu-24.04
+    steps:/n      - uses: actions/checkout@v4
         with: { fetch-depth: 1 }
-      - name: Build (IMPORTED_MEMORY)
+      - name: Build
         run: |
           cd src/emscripten
           DOCKER_USER=$(id -u):$(id -g) docker compose run emscripten \
             make -C .. emscripten_build ARCH=wasm wasm_simd=yes embedded_nnue=yes
-      - name: Assert wasm imports memory
-        run: |
-          node -e "const fs=require('fs');const m=new WebAssembly.Module(fs.readFileSync('src/stockfish.wasm'));console.log('MEMORY_IMPORTS='+JSON.stringify(WebAssembly.Module.imports(m).filter(i=>i.kind==='memory')))"
+      - name: Assert public worker has custom-message postamble
+        run: grep -c onCustomMessage src/emscripten/public/stockfish.worker.js
       - uses: actions/upload-artifact@v4
-        with:
-          name: fs-wasm-c
+        with:/n          name: fs-wasm-c
           path: |
-            src/stockfish.js
-            src/stockfish.wasm
-            src/stockfish.worker.js
+            src/emscripten/public/stockfish.js
+            src/emscripten/public/stockfish.wasm
+            src/emscripten/public/stockfish.worker.js
