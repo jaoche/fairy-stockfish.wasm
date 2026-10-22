@@ -1,8 +1,15 @@
 name: build-fs-wasm-c
-on:/n  workflow_dispatch:/n  push:/n    branches: [build-c-imported-memory, build-asyncify-advise, build-x-matrix]
-jobs:/n  build:/n    runs-on: ubuntu-24.04
-    steps:/n      - uses: actions/checkout@v4
-        with: { fetch-depth: 1 }
+on:
+  workflow_dispatch:
+  push:
+    branches: [build-x-matrix]
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: Build
         run: |
           cd src/emscripten
@@ -11,7 +18,8 @@ jobs:/n  build:/n    runs-on: ubuntu-24.04
       - name: Assert public worker has custom-message postamble
         run: grep -c onCustomMessage src/emscripten/public/stockfish.worker.js
       - uses: actions/upload-artifact@v4
-        with:/n          name: fs-wasm-c
+        with:
+          name: fs-wasm-c
           path: |
             src/emscripten/public/stockfish.js
             src/emscripten/public/stockfish.wasm
