@@ -2,7 +2,7 @@ name: build-fs-wasm-c
 on:
   workflow_dispatch:
   push:
-    branches: [build-c-imported-memory]
+    branches: [build-c-imported-memory, build-x-matrix]
 jobs:
   build:
     runs-on: ubuntu-24.04
