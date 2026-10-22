@@ -1,0 +1,24 @@
+name: build-fs-wasm-c
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 1 }
+      - name: Build (IMPORTED_MEMORY)
+        run: |
+          cd src/emscripten
+          DOCKER_USER=$(id -u):$(id -g) docker compose run emscripten \
+            make -C .. emscripten_build ARCH=wasm wasm_simd=yes embedded_nnue=yes
+      - name: Assert wasm imports memory
+        run: |
+          node -e "const fs=require('fs');const m=new WebAssembly.Module(fs.readFileSync('src/stockfish.wasm'));console.log(JSON.stringify(WebAssembly.Module.imports(m).filter(i=>i.kind==='memory')))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fs-wasm-c
+          path: |
+            src/stockfish.js
+            src/stockfish.wasm
+            src/stockfish.worker.js
