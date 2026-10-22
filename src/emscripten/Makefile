@@ -17,7 +17,7 @@ EM_LDFLAGS += \
 	--pre-js emscripten/preamble.js \
 	-s MODULARIZE=1 -s EXPORT_NAME="Stockfish" -s ENVIRONMENT=web,worker,node \
 	-s STRICT=1 \
-	-s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=["emscripten_utils_getline_impl"]' \
+	-s ASYNCIFY=1 -s ASYNCIFY_ADVISE=1 -s 'ASYNCIFY_IMPORTS=["emscripten_utils_getline_impl"]' \
 	-s USE_PTHREADS=1 \
 	-s PROXY_TO_PTHREAD=1 \
 	-s IMPORTED_MEMORY=1 -s ALLOW_MEMORY_GROWTH=0 -s MAXIMUM_MEMORY=2147483648 \
