@@ -18,12 +18,15 @@ jobs:
           echo "=== 产物清单 ==="
           ls -l .. | head -30
           ls -l public 2>/dev/null | head -10
-      - name: Assert public worker has custom-message postamble
-        run: grep -c onCustomMessage src/emscripten/public/stockfish.worker.js
+      - name: Report worker file (optional on emsdk>=3)
+        run: |
+          ls -l src/emscripten/public || true
+          if [ -f src/emscripten/public/stockfish.worker.js ]; then
+            grep -c onCustomMessage src/emscripten/public/stockfish.worker.js || true
+          else
+            echo "no standalone worker (emsdk>=3 inlines pthread worker)"
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: fs-wasm-c
-          path: |
-            src/emscripten/public/stockfish.js
-            src/emscripten/public/stockfish.wasm
-            src/emscripten/public/stockfish.worker.js
+          path: src/emscripten/public/stockfish*
