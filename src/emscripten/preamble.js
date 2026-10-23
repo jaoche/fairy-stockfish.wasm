@@ -77,3 +77,7 @@ Module["print"] = Module["printErr"] = (data) => {
 Module["terminate"] = () => {
   PThread.terminateAllThreads();
 };
+
+// PROXY_TO_PTHREAD 下 await Stockfish() 返回的是 pthread main（B）的 Module；
+// stdout 代理在模块线程 A 执行，listener 必须注册在 A —— 这里把 A 暴露给宿主。
+self.__emscriptenModuleRef = Module;
