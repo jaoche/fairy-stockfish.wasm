@@ -15,3 +15,4 @@ To release a new version:
 * Make sure CI passes (update reference bench if required)
 * Bump version number in `src/emscripten/public/package.json`
 * Create and push a tag with the name corresponding to the version number
+
