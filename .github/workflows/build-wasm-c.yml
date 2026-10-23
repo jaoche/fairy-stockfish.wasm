@@ -2,7 +2,7 @@ name: build-fs-wasm-c
 on:
   workflow_dispatch:
   push:
-    branches: [build-x-matrix]
+    branches: [build-x-matrix, build-futex21]
 jobs:
   build:
     runs-on: ubuntu-24.04
