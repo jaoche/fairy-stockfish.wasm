@@ -10,14 +10,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Pre-flight
+        run: |
+          df -h /
+          docker version --format 'docker server: {{.Server.Version}}'
       - name: Build
         run: |
           cd src/emscripten
           DOCKER_USER=$(id -u):$(id -g) docker compose run emscripten \
-            make -C .. emscripten_build ARCH=wasm wasm_simd=yes embedded_nnue=yes || true
+            make -C .. emscripten_build ARCH=wasm wasm_simd=yes embedded_nnue=yes minify_js=no
           echo "=== 产物清单 ==="
           ls -l .. | head -30
-          ls -l public 2>/dev/null | head -10
       - name: Report worker file (optional on emsdk>=3)
         run: |
           ls -l src/emscripten/public || true
