@@ -1,3 +1,4 @@
+	-s EXTRA_EXPORTED_RUNTIME_METHODS=["FS","stringToUTF8","lengthBytesUTF8","free"] \
 EXE = stockfish.js
 COMP = em++
 CXX = em++
@@ -14,14 +15,11 @@ assertion = no
 VPATH := $(VPATH):emscripten
 EM_CXXFLAGS +=
 EM_LDFLAGS += \
-	--pre-js emscripten/preamble.js --post-js emscripten/worker-hook.js \
 	-s MODULARIZE=1 -s EXPORT_NAME="Stockfish" -s ENVIRONMENT=web,worker,node \
 	-s STRICT=1 \
-	-s ASYNCIFY=1 -s 'ASYNCIFY_IMPORTS=["emscripten_utils_getline_impl"]' \
 	-pthread \
 	-s PROXY_TO_PTHREAD=1 \
 	-s IMPORTED_MEMORY=1 -s ALLOW_MEMORY_GROWTH=1 -s INITIAL_MEMORY=67108864 -s MAXIMUM_MEMORY=2147483648 \
-	-s FILESYSTEM=1 -s EXTRA_EXPORTED_RUNTIME_METHODS=["FS"] \
 	-s WASM_BIGINT=1 \
 	-s ALLOW_UNIMPLEMENTED_SYSCALLS
 
