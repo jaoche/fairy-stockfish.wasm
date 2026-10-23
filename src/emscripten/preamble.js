@@ -75,3 +75,18 @@ Module["print"] = Module["printErr"] = (data) => {
 Module["terminate"] = () => {
   PThread.terminateAllThreads();
 };
+
+//
+// WORKER_CUSTOM_HOOK（emsdk>=3 不再产出独立 stockfish.worker.js）：
+// 在 pthread worker 侧接管 custom 消息（原来由 worker-postamble.js 注入）
+//
+if (typeof ENVIRONMENT_IS_PTHREAD !== 'undefined' && ENVIRONMENT_IS_PTHREAD) {
+  const __prevOnMessage = self.onmessage;
+  self.onmessage = function (e) {
+    if (e && e.data && e.data.cmd === 'custom') {
+      if (typeof Module['onCustomMessage'] === 'function') Module['onCustomMessage'](e.data.userData);
+      return;
+    }
+    if (__prevOnMessage) __prevOnMessage(e);
+  };
+}
