@@ -19,7 +19,7 @@ EM_LDFLAGS += \
 	-pthread \
 	-s PROXY_TO_PTHREAD=1 \
 	-s IMPORTED_MEMORY=1 -s ALLOW_MEMORY_GROWTH=1 -s INITIAL_MEMORY=67108864 -s MAXIMUM_MEMORY=2147483648 \
-	--pre-js emscripten/preamble.js \
+	--pre-js emscripten/preamble.js --post-js emscripten/worker-print.js \
 	-sEXPORTED_FUNCTIONS=["_malloc","_main"] \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS=["FS","stringToUTF8","lengthBytesUTF8","free"] \
 	-s WASM_BIGINT=1 \
