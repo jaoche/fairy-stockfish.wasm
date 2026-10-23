@@ -14,7 +14,7 @@ assertion = no
 VPATH := $(VPATH):emscripten
 EM_CXXFLAGS +=
 EM_LDFLAGS += \
-	--pre-js emscripten/preamble.js --post-js emscripten/worker-hook.js \
+	--pre-js emscripten/preamble.js \
 	-s MODULARIZE=1 -s EXPORT_NAME="Stockfish" -s ENVIRONMENT=web,worker,node \
 	-s STRICT=1 \
 	-s USE_PTHREADS=1 \
