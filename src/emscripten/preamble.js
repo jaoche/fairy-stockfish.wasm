@@ -2,11 +2,13 @@
 // Post custom message to all workers (including main worker)
 //
 Module["postCustomMessage"] = (data) => {
-  // TODO: Acutally want to post only to main worker
-  for (let worker of PThread.runningWorkers) {
-    // prettier-ignore
-    worker.postMessage({ "cmd": "custom", "userData": data });
-  }
+  // futex 移植：A 线程（模块 worker，事件循环空闲）直接调导出函数写入共享内存队列，
+  // B（pthread main）的 js_getline 会被跨线程 futex 唤醒。不再广播 worker（B 阻塞中收不到）。
+  const line = String(data);
+  const bytes = Module['lengthBytesUTF8'](line) + 1;
+  const ptr = Module['_malloc'](bytes);
+  Module['stringToUTF8'](line, ptr, bytes);
+  Module['_emscripten_utils_push_line'](ptr);
 };
 
 //
