@@ -6,8 +6,8 @@
 if (typeof ENVIRONMENT_IS_PTHREAD !== 'undefined' && ENVIRONMENT_IS_PTHREAD) {
   const __prevWorkerOnMessage = self.onmessage;
   self.onmessage = function (e) {
-    if (e && e.data && e.data.cmd === 'custom') {
-      if (typeof Module['onCustomMessage'] === 'function') Module['onCustomMessage'](e.data.userData);
+    if (e && e.data && e.data['cmd'] === 'custom') {
+      if (typeof Module['onCustomMessage'] === 'function') Module['onCustomMessage'](e.data['userData']);
       return;
     }
     if (__prevWorkerOnMessage) __prevWorkerOnMessage(e);
