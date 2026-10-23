@@ -1,8 +1,9 @@
 //
-// worker-print.js（--post-js，仅 pthread worker 侧）：
-// emsdk>=3 的 pthread stdout 在 B 自身 print（listeners 空 → console fallback），
-// 这里改为 postMessage 回模块线程 A，由 fs-engine-worker 转发给适配器 listener。
+// worker-print.js（--post-js，pthread worker 侧）：out/err 在脚本求值期就绑定 console
+// （那时 print listeners 还没注册），这里重绑为走 Module.print → 适配器 listener。
+// 注意：必须在同一闭包内重赋值（minify_js=no 保证名字不被改）。
 //
 if (typeof ENVIRONMENT_IS_PTHREAD !== 'undefined' && ENVIRONMENT_IS_PTHREAD) {
-  Module['print'] = (line) => self.postMessage({ cmd: '__print', line: String(line) });
+  out = (text) => { if (Module['print']) Module['print'](String(text)); };
+  err = (text) => { if (Module['printErr']) Module['printErr'](String(text)); };
 }
