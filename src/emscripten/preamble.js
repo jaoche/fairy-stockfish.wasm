@@ -2,11 +2,18 @@
 // Post custom message to all workers (including main worker)
 //
 Module["postCustomMessage"] = (data) => {
-  // TODO: Acutally want to post only to main worker
-  for (let worker of new Set([...(PThread.loadedWorkers || []), ...(PThread.runningWorkers || [])])) {
-    // prettier-ignore
-    worker.postMessage({ "cmd": "custom", "userData": data });
-  }
+  // emsdk>=3：worker 可能还没登记进任何池（启动竞态）→ 全池广播 + 排队重试
+  const post = () => {
+    const ws = new Set([
+      ...(PThread.loadedWorkers || []),
+      ...(PThread.runningWorkers || []),
+      ...(PThread.unusedWorkers || []),
+      ...Object.values(PThread.pthreads || {}).filter((w) => w && typeof w.postMessage === 'function'),
+    ]);
+    if (ws.size === 0) { setTimeout(post, 100); return; }
+    for (const worker of ws) worker.postMessage({ cmd: 'custom', userData: data });
+  };
+  post();
 };
 
 //
