@@ -14,7 +14,7 @@ jobs:
         run: |
           cd src/emscripten
           DOCKER_USER=$(id -u):$(id -g) docker compose run emscripten \
-            make -C .. emscripten_build ARCH=wasm wasm_simd=yes embedded_nnue=yes minify_js=no || true
+            make -C .. emscripten_build ARCH=wasm wasm_simd=yes embedded_nnue=yes || true
           echo "=== 产物清单 ==="
           ls -l .. | head -30
           ls -l public 2>/dev/null | head -10
