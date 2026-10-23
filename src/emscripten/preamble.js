@@ -2,15 +2,13 @@
 // Post custom message to all workers (including main worker)
 //
 Module["postCustomMessage"] = (data) => {
-  // futex 移植：模块线程 A（事件循环空闲）直调导出函数写共享内存队列，
-  // pthread main 的 getline 跨线程 futex 唤醒。广播给阻塞线程 = 自死锁，不可用。
+  // futex 移植：A 线程（模块 worker，事件循环空闲）直接调导出函数写入共享内存队列，
+  // B（pthread main）的 js_getline 会被跨线程 futex 唤醒。不再广播 worker（B 阻塞中收不到）。
   const line = String(data);
   const bytes = Module['lengthBytesUTF8'](line) + 1;
   const ptr = Module['_malloc'](bytes);
   Module['stringToUTF8'](line, ptr, bytes);
   Module['_emscripten_utils_push_line'](ptr);
-};
-  post();
 };
 
 //
@@ -79,18 +77,3 @@ Module["print"] = Module["printErr"] = (data) => {
 Module["terminate"] = () => {
   PThread.terminateAllThreads();
 };
-
-//
-// WORKER_CUSTOM_HOOK（emsdk>=3 不再产出独立 stockfish.worker.js）：
-// 在 pthread worker 侧接管 custom 消息（原来由 worker-postamble.js 注入）
-//
-if (typeof ENVIRONMENT_IS_PTHREAD !== 'undefined' && ENVIRONMENT_IS_PTHREAD) {
-  const __prevOnMessage = self.onmessage;
-  self.onmessage = function (e) {
-    if (e && e.data && e.data.cmd === 'custom') {
-      if (typeof Module['onCustomMessage'] === 'function') Module['onCustomMessage'](e.data.userData);
-      return;
-    }
-    if (__prevOnMessage) __prevOnMessage(e);
-  };
-}
