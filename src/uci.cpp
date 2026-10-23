@@ -380,9 +380,20 @@ void UCI::loop(int argc, char* argv[]) {
           std::istringstream ss("startpos");
           position(pos, ss, states);
           if (is_uci_dialect(CurrentProtocol) && token != "ucicyclone")
-              sync_cout << "id name " << engine_info(true)
+          {
+#ifdef __EMSCRIPTEN__
+            // emsdk 3.1.74：pthread 大块 stdout 代理写会挂死 → 分块刷出
+            std::ostringstream os;
+            os << "id name " << engine_info(true) << "\n" << Options << "\n" << token << "ok" << "\n";
+            const std::string all = os.str();
+            for (size_t off = 0; off < all.size(); off += 512)
+              std::cout << all.substr(off, 512) << std::flush;
+#else
+            sync_cout << "id name " << engine_info(true)
                           << "\n" << Options
                           << "\n" << token << "ok"  << sync_endl;
+#endif
+          }
           // Allow to enforce protocol at startup
           argc = 1;
       }
