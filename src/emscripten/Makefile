@@ -73,7 +73,7 @@ endif
 
 emscripten_copy_files:
 	cp -f ../AUTHORS ../Copying.txt stockfish.js stockfish.wasm emscripten/public
-	cat stockfish.worker.js emscripten/worker-postamble.js > emscripten/public/stockfish.worker.js
+	if [ -f stockfish.worker.js ]; then cat stockfish.worker.js emscripten/worker-postamble.js > emscripten/public/stockfish.worker.js; fi
 
 emscripten_build: build emscripten_copy_files
 
