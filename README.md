@@ -16,3 +16,4 @@ To release a new version:
 * Bump version number in `src/emscripten/public/package.json`
 * Create and push a tag with the name corresponding to the version number
 
+
