@@ -3,7 +3,7 @@
 //
 Module["postCustomMessage"] = (data) => {
   // TODO: Acutally want to post only to main worker
-  for (let worker of PThread.runningWorkers) {
+  for (let worker of new Set([...(PThread.loadedWorkers || []), ...(PThread.runningWorkers || [])])) {
     // prettier-ignore
     worker.postMessage({ "cmd": "custom", "userData": data });
   }
