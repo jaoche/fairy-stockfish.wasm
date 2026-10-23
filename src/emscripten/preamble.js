@@ -2,17 +2,14 @@
 // Post custom message to all workers (including main worker)
 //
 Module["postCustomMessage"] = (data) => {
-  // emsdk>=3：worker 可能还没登记进任何池（启动竞态）→ 全池广播 + 排队重试
-  const post = () => {
-    const ws = new Set([
-      ...(PThread.loadedWorkers || []),
-      ...(PThread.runningWorkers || []),
-      ...(PThread.unusedWorkers || []),
-      ...Object.values(PThread.pthreads || {}).filter((w) => w && typeof w.postMessage === 'function'),
-    ]);
-    if (ws.size === 0) { setTimeout(post, 100); return; }
-    for (const worker of ws) worker.postMessage({ cmd: 'custom', userData: data });
-  };
+  // futex 移植：模块线程 A（事件循环空闲）直调导出函数写共享内存队列，
+  // pthread main 的 getline 跨线程 futex 唤醒。广播给阻塞线程 = 自死锁，不可用。
+  const line = String(data);
+  const bytes = Module['lengthBytesUTF8'](line) + 1;
+  const ptr = Module['_malloc'](bytes);
+  Module['stringToUTF8'](line, ptr, bytes);
+  Module['_emscripten_utils_push_line'](ptr);
+};
   post();
 };
 
