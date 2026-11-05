@@ -2,7 +2,7 @@ name: build-fs-wasm-c
 on:
   workflow_dispatch:
   push:
-    branches: [build-emsdk31]
+    branches: [build-emsdk31, build-lto]
 jobs:
   build:
     runs-on: ubuntu-24.04
