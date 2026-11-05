@@ -14,6 +14,7 @@ assertion = no
 VPATH := $(VPATH):emscripten
 # 2026-11-05 LTO 实验：仅编译期 -flto（bitcode 对象），链接期**不加** —— emsdk sysroot 只有非 LTO 系统库
 EM_CXXFLAGS += -flto
+EM_LDFLAGS += -flto
 EM_LDFLAGS += \
 	-s MODULARIZE=1 -s EXPORT_NAME="Stockfish" -s ENVIRONMENT=web,worker,node \
 	-s STRICT=1 \
